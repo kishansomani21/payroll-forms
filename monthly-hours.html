@@ -388,24 +388,7 @@ form.addEventListener('submit', (e) => {
 
   const msg = lines.join('\n');
 
-  document.getElementById('formView').classList.add('hidden');
-  document.getElementById('successView').classList.add('active');
-
-  const summaryData = [
-    { l: 'Employee', v: name },
-    { l: 'Period', v: month + ' ' + year },
-    { l: 'Hours', v: hours },
-    { l: 'Overtime', v: overtime },
-  ];
-  if (parseFloat(sick) > 0) summaryData.push({ l: 'Sick', v: sick + ' days' });
-  if (parseFloat(holiday) > 0) summaryData.push({ l: 'Holiday', v: holiday + ' days' });
-
-  document.getElementById('summaryBox').innerHTML = summaryData.map(r =>
-    '<div class="summary-row"><span class="lbl">' + r.l + '</span><span class="val">' + r.v + '</span></div>'
-  ).join('');
-
-  const url = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg);
-  setTimeout(() => window.open(url, '_blank'), 500);
+  window.location.href = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg);
 });
 </script>
 

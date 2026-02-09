@@ -340,22 +340,8 @@ form.addEventListener('submit', (e) => {
     'Email: ' + email,
   ].join('\n');
 
-  // Switch views
-  document.getElementById('formView').classList.add('hidden');
-  document.getElementById('successView').classList.add('active');
-
-  // Summary
-  document.getElementById('summaryBox').innerHTML = [
-    { l: 'Name', v: firstName + ' ' + lastName },
-    { l: 'Phone', v: phone },
-    { l: 'Email', v: email },
-  ].map(r =>
-    '<div class="summary-row"><span class="lbl">' + r.l + '</span><span class="val">' + r.v + '</span></div>'
-  ).join('');
-
-  // Open WhatsApp
-  const url = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg);
-  setTimeout(() => window.open(url, '_blank'), 500);
+  // Go straight to WhatsApp — client just taps send
+  window.location.href = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg);
 });
 </script>
 

@@ -366,20 +366,7 @@ form.addEventListener('submit', (e) => {
 
   const msg = lines.join('\n');
 
-  document.getElementById('formView').classList.add('hidden');
-  document.getElementById('successView').classList.add('active');
-
-  document.getElementById('summaryBox').innerHTML = [
-    { l: 'Name', v: firstName + ' ' + lastName },
-    { l: 'Leaving', v: leavingDate },
-    { l: 'Reason', v: reason },
-    { l: 'Final pay', v: finalPay },
-  ].map(r =>
-    '<div class="summary-row"><span class="lbl">' + r.l + '</span><span class="val">' + r.v + '</span></div>'
-  ).join('');
-
-  const url = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg);
-  setTimeout(() => window.open(url, '_blank'), 500);
+  window.location.href = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg);
 });
 </script>
 
