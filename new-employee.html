@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>New Employee</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f2f2f7;
+    color: #000;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 60px 20px 40px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+
+  .header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: #000;
+    margin-bottom: 8px;
+  }
+
+  .header p {
+    font-size: 15px;
+    color: #888;
+    line-height: 1.4;
+  }
+
+  .group {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+
+  .group-label {
+    font-size: 13px;
+    font-weight: 400;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    padding: 0 20px 6px;
+    margin-bottom: 0;
+  }
+
+  .field {
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    min-height: 44px;
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+  .field:last-child {
+    border-bottom: none;
+  }
+
+  .field label {
+    font-size: 16px;
+    font-weight: 400;
+    color: #000;
+    width: 110px;
+    flex-shrink: 0;
+  }
+
+  .field input, .field select {
+    flex: 1;
+    height: 44px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: #000;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 0;
+    -webkit-appearance: none;
+  }
+
+  .field input::placeholder {
+    color: #c7c7cc;
+  }
+
+  .field input.error {
+    color: #ff3b30;
+  }
+
+  .field select {
+    color: #000;
+    cursor: pointer;
+  }
+
+  .error-msg {
+    font-size: 13px;
+    color: #ff3b30;
+    padding: 6px 20px 0;
+    display: none;
+  }
+
+  .error-msg.visible {
+    display: block;
+  }
+
+  .submit-btn {
+    display: block;
+    width: 100%;
+    height: 50px;
+    background: #000;
+    color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    transition: opacity 0.15s;
+  }
+
+  .submit-btn:active {
+    opacity: 0.7;
+  }
+
+  .submit-btn:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 13px;
+    color: #888;
+    line-height: 1.4;
+  }
+
+  .success {
+    display: none;
+    text-align: center;
+    padding: 80px 20px 40px;
+  }
+
+  .success.active {
+    display: block;
+  }
+
+  .success .check {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #000;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .success .check svg {
+    width: 28px;
+    height: 28px;
+    color: #fff;
+  }
+
+  .success h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 6px;
+  }
+
+  .success p {
+    font-size: 15px;
+    color: #888;
+    margin-bottom: 28px;
+  }
+
+  .summary {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    text-align: left;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #e5e5e5;
+    font-size: 15px;
+  }
+
+  .summary-row:last-child {
+    border-bottom: none;
+  }
+
+  .summary-row .lbl {
+    color: #888;
+  }
+
+  .summary-row .val {
+    color: #000;
+    font-weight: 500;
+  }
+
+  .form-view.hidden {
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="form-view" id="formView">
+    <div class="header">
+      <h1>New Employee</h1>
+      <p>Enter the new starter's details</p>
+    </div>
+
+    <form id="form" novalidate>
+      <p class="group-label">Personal details</p>
+      <div class="group">
+        <div class="field">
+          <label for="firstName">First name</label>
+          <input type="text" id="firstName" placeholder="Required" autocomplete="given-name" required>
+        </div>
+        <div class="field">
+          <label for="lastName">Last name</label>
+          <input type="text" id="lastName" placeholder="Required" autocomplete="family-name" required>
+        </div>
+        <div class="field">
+          <label for="dob">Date of birth</label>
+          <input type="date" id="dob" required>
+        </div>
+        <div class="field">
+          <label for="ni">NI number</label>
+          <input type="text" id="ni" placeholder="AB 12 34 56 C" autocomplete="off" required>
+        </div>
+      </div>
+
+      <p class="group-label">Contact</p>
+      <div class="group">
+        <div class="field">
+          <label for="phone">Phone</label>
+          <input type="tel" id="phone" placeholder="07712 345 678" autocomplete="tel" required>
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="john@company.co.uk" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="address">Address</label>
+          <input type="text" id="address" placeholder="Full address" autocomplete="street-address" required>
+        </div>
+      </div>
+
+      <p class="group-label">Employment</p>
+      <div class="group">
+        <div class="field">
+          <label for="startDate">Start date</label>
+          <input type="date" id="startDate" required>
+        </div>
+        <div class="field">
+          <label for="jobTitle">Job title</label>
+          <input type="text" id="jobTitle" placeholder="Required" required>
+        </div>
+        <div class="field">
+          <label for="salary">Annual salary</label>
+          <input type="number" id="salary" placeholder="e.g. 28000" inputmode="decimal" required>
+        </div>
+        <div class="field">
+          <label for="hours">Hours / week</label>
+          <input type="number" id="hours" placeholder="e.g. 37.5" inputmode="decimal" required>
+        </div>
+      </div>
+
+      <p class="error-msg" id="errorMsg">Please fill in all fields correctly.</p>
+
+      <button type="submit" class="submit-btn">Submit</button>
+    </form>
+
+    <p class="footer">Details are secure and only used for payroll.</p>
+  </div>
+
+  <div class="success" id="successView">
+    <div class="check">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 13l4 4L19 7"/>
+      </svg>
+    </div>
+    <h2>Logged</h2>
+    <p>Details sent to WhatsApp.</p>
+    <div class="summary" id="summaryBox"></div>
+  </div>
+
+</div>
+
+<script>
+const WHATSAPP_NUMBER = '447XXXXXXXXX';
+
+const form = document.getElementById('form');
+const inputs = form.querySelectorAll('input');
+
+inputs.forEach(input => {
+  input.addEventListener('input', () => {
+    input.classList.remove('error');
+    document.getElementById('errorMsg').classList.remove('visible');
+  });
+});
+
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  const [y, m, d] = dateStr.split('-');
+  return d + '-' + m + '-' + y;
+}
+
+function validate() {
+  let valid = true;
+  const checks = {
+    firstName: v => v.trim().length > 0,
+    lastName: v => v.trim().length > 0,
+    dob: v => v.length > 0,
+    ni: v => /^[A-Z]{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?[A-D]$/i.test(v.trim()),
+    phone: v => v.replace(/\s/g, '').length >= 10,
+    email: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
+    address: v => v.trim().length > 0,
+    startDate: v => v.length > 0,
+    jobTitle: v => v.trim().length > 0,
+    salary: v => parseFloat(v) > 0,
+    hours: v => parseFloat(v) > 0,
+  };
+
+  for (const [id, check] of Object.entries(checks)) {
+    const el = document.getElementById(id);
+    if (!check(el.value)) {
+      el.classList.add('error');
+      valid = false;
+    }
+  }
+
+  if (!valid) {
+    document.getElementById('errorMsg').classList.add('visible');
+  }
+  return valid;
+}
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  if (!validate()) return;
+
+  const firstName = document.getElementById('firstName').value.trim();
+  const lastName = document.getElementById('lastName').value.trim();
+  const dob = formatDate(document.getElementById('dob').value);
+  const ni = document.getElementById('ni').value.trim().toUpperCase();
+  const phone = document.getElementById('phone').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const address = document.getElementById('address').value.trim();
+  const startDate = formatDate(document.getElementById('startDate').value);
+  const jobTitle = document.getElementById('jobTitle').value.trim();
+  const salary = document.getElementById('salary').value.trim();
+  const hours = document.getElementById('hours').value.trim();
+
+  const msg = [
+    '👤 NEW EMPLOYEE',
+    '',
+    'First Name: ' + firstName,
+    'Last Name: ' + lastName,
+    'Date of Birth: ' + dob,
+    'NI Number: ' + ni,
+    'Phone: ' + phone,
+    'Email: ' + email,
+    'Address: ' + address,
+    'Start Date: ' + startDate,
+    'Job Title: ' + jobTitle,
+    'Annual Salary: £' + salary,
+    'Hours/Week: ' + hours,
+  ].join('\n');
+
+  document.getElementById('formView').classList.add('hidden');
+  document.getElementById('successView').classList.add('active');
+
+  document.getElementById('summaryBox').innerHTML = [
+    { l: 'Name', v: firstName + ' ' + lastName },
+    { l: 'NI', v: ni },
+    { l: 'Start', v: startDate },
+    { l: 'Salary', v: '£' + Number(salary).toLocaleString() },
+    { l: 'Hours', v: hours + ' hrs/wk' },
+  ].map(r =>
+    '<div class="summary-row"><span class="lbl">' + r.l + '</span><span class="val">' + r.v + '</span></div>'
+  ).join('');
+
+  const url = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg);
+  setTimeout(() => window.open(url, '_blank'), 500);
+});
+</script>
+
+</body>
+</html>
