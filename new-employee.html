@@ -15,13 +15,20 @@
   .group-label { font-size: 13px; color: #888; text-transform: uppercase; letter-spacing: 0.02em; padding: 0 20px 6px; }
   .field { display: flex; align-items: center; padding: 0 16px; min-height: 44px; border-bottom: 1px solid #e5e5e5; }
   .field:last-child { border-bottom: none; }
-  .field label { font-size: 16px; width: 110px; flex-shrink: 0; }
-  .field input { flex: 1; height: 44px; font-family: inherit; font-size: 16px; color: #000; background: transparent; border: none; outline: none; padding: 0; -webkit-appearance: none; }
+  .field label { font-size: 16px; width: 120px; flex-shrink: 0; }
+  .field input, .field select { flex: 1; height: 44px; font-family: inherit; font-size: 16px; color: #000; background: transparent; border: none; outline: none; padding: 0; -webkit-appearance: none; appearance: none; }
   .field input::placeholder { color: #c7c7cc; }
-  .field input.error { color: #ff3b30; }
+  .field select { color: #c7c7cc; background: transparent; }
+  .field select.selected { color: #000; }
+  .field input.error, .field select.error { color: #ff3b30; }
+  /* Radio / pill groups */
+  .pill-group { flex: 1; display: flex; gap: 8px; padding: 8px 0; flex-wrap: wrap; }
+  .pill-group input[type="radio"] { display: none; }
+  .pill-group label.pill { font-size: 14px; padding: 6px 14px; border-radius: 20px; border: 1px solid #d1d1d6; cursor: pointer; transition: all 0.15s; width: auto; flex-shrink: initial; }
+  .pill-group input[type="radio"]:checked + label.pill { background: #000; color: #fff; border-color: #000; }
   .error-msg { font-size: 13px; color: #ff3b30; padding: 6px 20px 0; display: none; }
   .error-msg.visible { display: block; }
-  .submit-btn { display: block; width: 100%; height: 50px; background: #000; color: #fff; font-family: inherit; font-size: 17px; font-weight: 600; border: none; border-radius: 12px; cursor: pointer; -webkit-appearance: none; transition: opacity 0.15s; }
+  .submit-btn { display: block; width: 100%; height: 50px; background: #000; color: #fff; font-family: inherit; font-size: 17px; font-weight: 600; border: none; border-radius: 12px; cursor: pointer; -webkit-appearance: none; transition: opacity 0.15s; margin-top: 8px; }
   .submit-btn:active { opacity: 0.7; }
   .submit-btn:disabled { opacity: 0.3; cursor: default; }
   .footer { text-align: center; margin-top: 16px; font-size: 13px; color: #888; }
@@ -32,6 +39,8 @@
   .success h2 { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
   .success p { font-size: 15px; color: #888; }
   .form-view.hidden { display: none; }
+  .conditional { display: none; }
+  .conditional.show { display: flex; }
 </style>
 </head>
 <body>
@@ -42,8 +51,30 @@
       <p>Enter the new starter's details</p>
     </div>
     <form id="form" novalidate>
+
+      <p class="group-label">Employer</p>
+      <div class="group">
+        <div class="field">
+          <label for="employer">Employer name</label>
+          <input type="text" id="employer" placeholder="Required" required>
+        </div>
+      </div>
+
       <p class="group-label">Personal details</p>
       <div class="group">
+        <div class="field">
+          <label>Title</label>
+          <div class="pill-group">
+            <input type="radio" name="title" id="titleMr" value="Mr">
+            <label class="pill" for="titleMr">Mr</label>
+            <input type="radio" name="title" id="titleMrs" value="Mrs">
+            <label class="pill" for="titleMrs">Mrs</label>
+            <input type="radio" name="title" id="titleMs" value="Ms">
+            <label class="pill" for="titleMs">Ms</label>
+            <input type="radio" name="title" id="titleMiss" value="Miss">
+            <label class="pill" for="titleMiss">Miss</label>
+          </div>
+        </div>
         <div class="field">
           <label for="firstName">First name</label>
           <input type="text" id="firstName" placeholder="Required" autocomplete="given-name" required>
@@ -57,25 +88,32 @@
           <input type="date" id="dob" required>
         </div>
         <div class="field">
-          <label for="ni">NI number</label>
-          <input type="text" id="ni" placeholder="AB 12 34 56 C" autocomplete="off" required>
+          <label>Gender</label>
+          <div class="pill-group">
+            <input type="radio" name="gender" id="genderM" value="Male">
+            <label class="pill" for="genderM">Male</label>
+            <input type="radio" name="gender" id="genderF" value="Female">
+            <label class="pill" for="genderF">Female</label>
+          </div>
         </div>
       </div>
+
       <p class="group-label">Contact</p>
       <div class="group">
+        <div class="field">
+          <label for="address">Full address</label>
+          <input type="text" id="address" placeholder="Including postcode" autocomplete="street-address" required>
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="john@example.co.uk" autocomplete="email" required>
+        </div>
         <div class="field">
           <label for="phone">Phone</label>
           <input type="tel" id="phone" placeholder="07712 345 678" autocomplete="tel" required>
         </div>
-        <div class="field">
-          <label for="email">Email</label>
-          <input type="email" id="email" placeholder="john@company.co.uk" autocomplete="email" required>
-        </div>
-        <div class="field">
-          <label for="address">Address</label>
-          <input type="text" id="address" placeholder="Full address" autocomplete="street-address" required>
-        </div>
       </div>
+
       <p class="group-label">Employment</p>
       <div class="group">
         <div class="field">
@@ -83,19 +121,95 @@
           <input type="date" id="startDate" required>
         </div>
         <div class="field">
-          <label for="jobTitle">Job title</label>
-          <input type="text" id="jobTitle" placeholder="Required" required>
+          <label>Paid</label>
+          <div class="pill-group">
+            <input type="radio" name="payFreq" id="freqWeekly" value="Weekly">
+            <label class="pill" for="freqWeekly">Weekly</label>
+            <input type="radio" name="payFreq" id="freqMonthly" value="Monthly">
+            <label class="pill" for="freqMonthly">Monthly</label>
+            <input type="radio" name="payFreq" id="freq4Weekly" value="4-Weekly">
+            <label class="pill" for="freq4Weekly">4-Weekly</label>
+          </div>
         </div>
         <div class="field">
+          <label>Pay basis</label>
+          <div class="pill-group">
+            <input type="radio" name="payBasis" id="basisSalary" value="Salary">
+            <label class="pill" for="basisSalary">Salary</label>
+            <input type="radio" name="payBasis" id="basisHourly" value="Hourly">
+            <label class="pill" for="basisHourly">Hourly</label>
+          </div>
+        </div>
+        <div class="field conditional" id="salaryField">
           <label for="salary">Annual salary</label>
-          <input type="number" id="salary" placeholder="e.g. 28000" inputmode="decimal" required>
+          <input type="text" id="salary" placeholder="e.g. 28000" inputmode="decimal">
+        </div>
+        <div class="field conditional" id="hourlyField">
+          <label for="hourlyRate">Hourly rate</label>
+          <input type="text" id="hourlyRate" placeholder="e.g. 12.50" inputmode="decimal">
         </div>
         <div class="field">
           <label for="hours">Hours / week</label>
-          <input type="number" id="hours" placeholder="e.g. 37.5" inputmode="decimal" required>
+          <input type="text" id="hours" placeholder="e.g. 37.5" inputmode="decimal" required>
         </div>
       </div>
-      <p class="error-msg" id="errorMsg">Please fill in all fields correctly.</p>
+
+      <p class="group-label">Bank details</p>
+      <div class="group">
+        <div class="field">
+          <label for="sortCode">Sort code</label>
+          <input type="text" id="sortCode" placeholder="00-00-00" inputmode="numeric">
+        </div>
+        <div class="field">
+          <label for="accountNo">Account no.</label>
+          <input type="text" id="accountNo" placeholder="12345678" inputmode="numeric">
+        </div>
+        <div class="field">
+          <label for="accountName">Account name</label>
+          <input type="text" id="accountName" placeholder="Name on account">
+        </div>
+      </div>
+
+      <p class="group-label">Tax &amp; compliance</p>
+      <div class="group">
+        <div class="field">
+          <label>Right to work</label>
+          <div class="pill-group">
+            <input type="radio" name="rightToWork" id="rtwYes" value="Yes">
+            <label class="pill" for="rtwYes">Yes</label>
+            <input type="radio" name="rightToWork" id="rtwNo" value="No">
+            <label class="pill" for="rtwNo">No</label>
+          </div>
+        </div>
+        <div class="field">
+          <label for="ni">NI number</label>
+          <input type="text" id="ni" placeholder="AB 12 34 56 C" autocomplete="off" required>
+        </div>
+        <div class="field">
+          <label>Student loan</label>
+          <div class="pill-group">
+            <input type="radio" name="studentLoan" id="slNone" value="None">
+            <label class="pill" for="slNone">None</label>
+            <input type="radio" name="studentLoan" id="slPlan1" value="Plan 1">
+            <label class="pill" for="slPlan1">Plan 1</label>
+            <input type="radio" name="studentLoan" id="slPlan2" value="Plan 2">
+            <label class="pill" for="slPlan2">Plan 2</label>
+            <input type="radio" name="studentLoan" id="slPlan4" value="Plan 4">
+            <label class="pill" for="slPlan4">Plan 4</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Postgrad loan</label>
+          <div class="pill-group">
+            <input type="radio" name="postgradLoan" id="pgNo" value="No">
+            <label class="pill" for="pgNo">No</label>
+            <input type="radio" name="postgradLoan" id="pgYes" value="Yes">
+            <label class="pill" for="pgYes">Yes</label>
+          </div>
+        </div>
+      </div>
+
+      <p class="error-msg" id="errorMsg">Please fill in all required fields correctly.</p>
       <button type="submit" class="submit-btn" id="submitBtn">Submit</button>
     </form>
     <p class="footer">Details are secure and only used for payroll.</p>
@@ -114,34 +228,61 @@
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxMzOKTvbsoMO8A5L4eNyoRjQKogHx2ynx8RS-8SDYNANlin96Ylp6YRQGuzeK8ceA/exec';
 
 const form = document.getElementById('form');
-form.querySelectorAll('input').forEach(input => {
-  input.addEventListener('input', () => {
-    input.classList.remove('error');
+
+// -- Select color fix: turn black when a value is picked --
+document.querySelectorAll('select').forEach(sel => {
+  sel.addEventListener('change', () => { sel.classList.toggle('selected', sel.value !== ''); });
+});
+
+// -- Clear errors on input --
+form.querySelectorAll('input, select').forEach(el => {
+  el.addEventListener('input', () => {
+    el.classList.remove('error');
     document.getElementById('errorMsg').classList.remove('visible');
   });
 });
 
+// -- Pay basis toggle: show salary OR hourly rate --
+document.querySelectorAll('input[name="payBasis"]').forEach(r => {
+  r.addEventListener('change', () => {
+    document.getElementById('salaryField').classList.toggle('show', r.value === 'Salary');
+    document.getElementById('hourlyField').classList.toggle('show', r.value === 'Hourly');
+  });
+});
+
+// -- Sort code formatting: auto-insert dashes --
+document.getElementById('sortCode').addEventListener('input', function() {
+  let v = this.value.replace(/[^0-9]/g, '').slice(0, 6);
+  if (v.length > 4) v = v.slice(0,2) + '-' + v.slice(2,4) + '-' + v.slice(4);
+  else if (v.length > 2) v = v.slice(0,2) + '-' + v.slice(2);
+  this.value = v;
+});
+
 function formatDate(d) { if (!d) return ''; const [y,m,dd] = d.split('-'); return dd+'-'+m+'-'+y; }
+function getRadio(name) { const r = form.querySelector(`input[name="${name}"]:checked`); return r ? r.value : ''; }
 
 function validate() {
   let valid = true;
-  const checks = {
-    firstName: v => v.trim().length > 0,
-    lastName: v => v.trim().length > 0,
-    dob: v => v.length > 0,
-    ni: v => /^[A-Z]{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?[A-D]$/i.test(v.trim()),
-    phone: v => v.replace(/\s/g, '').length >= 10,
-    email: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
-    address: v => v.trim().length > 0,
-    startDate: v => v.length > 0,
-    jobTitle: v => v.trim().length > 0,
-    salary: v => parseFloat(v) > 0,
-    hours: v => parseFloat(v) > 0,
-  };
-  for (const [id, check] of Object.entries(checks)) {
-    const el = document.getElementById(id);
-    if (!check(el.value)) { el.classList.add('error'); valid = false; }
-  }
+  const mark = (id) => { document.getElementById(id).classList.add('error'); valid = false; };
+
+  // Required text fields
+  ['employer','firstName','lastName','address','email','phone','hours','ni'].forEach(id => {
+    if (!document.getElementById(id).value.trim()) mark(id);
+  });
+
+  // Dates
+  if (!document.getElementById('dob').value) mark('dob');
+  if (!document.getElementById('startDate').value) mark('startDate');
+
+  // NI format
+  const niVal = document.getElementById('ni').value.trim();
+  if (niVal && !/^[A-Z]{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?[A-D]$/i.test(niVal)) mark('ni');
+
+  // Pay basis + amount
+  const basis = getRadio('payBasis');
+  if (basis === 'Salary' && !document.getElementById('salary').value.trim()) mark('salary');
+  if (basis === 'Hourly' && !document.getElementById('hourlyRate').value.trim()) mark('hourlyRate');
+
   if (!valid) document.getElementById('errorMsg').classList.add('visible');
   return valid;
 }
@@ -154,19 +295,31 @@ form.addEventListener('submit', async (e) => {
   btn.disabled = true;
   btn.textContent = 'Sending...';
 
+  const basis = getRadio('payBasis');
   const data = {
     type: 'new_employee',
+    employer: document.getElementById('employer').value.trim(),
+    title: getRadio('title'),
     first_name: document.getElementById('firstName').value.trim(),
     last_name: document.getElementById('lastName').value.trim(),
     date_of_birth: formatDate(document.getElementById('dob').value),
-    ni_number: document.getElementById('ni').value.trim().toUpperCase(),
-    phone: document.getElementById('phone').value.trim(),
-    email: document.getElementById('email').value.trim(),
+    gender: getRadio('gender'),
     address: document.getElementById('address').value.trim(),
+    email: document.getElementById('email').value.trim(),
+    phone: document.getElementById('phone').value.trim(),
     start_date: formatDate(document.getElementById('startDate').value),
-    job_title: document.getElementById('jobTitle').value.trim(),
-    annual_salary: document.getElementById('salary').value.trim(),
+    pay_frequency: getRadio('payFreq'),
+    pay_basis: basis,
+    annual_salary: basis === 'Salary' ? document.getElementById('salary').value.trim() : '',
+    hourly_rate: basis === 'Hourly' ? document.getElementById('hourlyRate').value.trim() : '',
     hours_per_week: document.getElementById('hours').value.trim(),
+    sort_code: document.getElementById('sortCode').value.trim(),
+    account_number: document.getElementById('accountNo').value.trim(),
+    account_name: document.getElementById('accountName').value.trim(),
+    right_to_work: getRadio('rightToWork'),
+    ni_number: document.getElementById('ni').value.trim().toUpperCase(),
+    student_loan: getRadio('studentLoan'),
+    postgrad_loan: getRadio('postgradLoan'),
   };
 
   try {
